@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-@Repository
+//@Repository
 public interface UserRepository extends JpaRepository<UserInfo, Long> {
     //delete 직접 커스텀
     @Modifying

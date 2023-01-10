@@ -1,11 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.model.UserInfo;
+import com.example.demo.repository.UserCustomRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
@@ -15,6 +17,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
     @Autowired
     private final UserRepository userRepository;
+
+    @Resource
+    private final UserCustomRepository userCustomRepository;
 
     @Override
     public String save(UserInfo userInfo) {
@@ -36,6 +41,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Optional<UserInfo> findByUserId(String id) {
-        return userRepository.findById(id);
+        return userCustomRepository.findById(id);
     }
 }
