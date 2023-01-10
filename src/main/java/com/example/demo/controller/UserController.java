@@ -41,13 +41,6 @@ public class UserController {
     public String delete(@PathVariable long seq){
         return userService.deleteBySeq(seq);
     }
-//
-//    @GetMapping("/user/{id}")
-//    public String read(@PathVariable long id){
-//        Optional<User> userOptional = userRepository.findById(id);
-//        userOptional.ifPresent(System.out::println);
-//
-//        return "Create UserInfo";
-//    }
+
 
 }
