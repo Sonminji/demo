@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <!--footerFragment 선언-->
-<div th:fragment="footerFragment">
-    <h1>Footer Section</h1>
-</div>
+<th:block th:fragment="footerFragment">
+    <div class="footer">
+        <h1 class="font-weight-bold">@copyright</h1>
+    </div>
+</th:block>
 </html>
