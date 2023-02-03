@@ -1,12 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.authority.UserAuthority;
+import com.example.demo.dto.UserDetailsDTO;
 import com.example.demo.dto.UserInfoDTO;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.repository.UserCustomRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,12 +36,22 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * 회원가입 구현 기능
+     *
+     * @param dto
+     * @return
+     */
     public String save(UserInfoDTO dto) {
-            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-            dto.setAuthority(UserAuthority.USER);
-            UserInfo userInfo = dtoToEntity(dto);
-            userRepository.save(userInfo);
-            return "Success";
+
+        // 비밀번호 암호화 및 권한 부여
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        dto.setAuthority("USER");
+
+        UserInfo userInfo = dtoToEntity(dto);
+        userRepository.save(userInfo);
+
+        return "Success";
 
     }
 
@@ -50,30 +64,32 @@ public class UserService implements UserDetailsService {
 //        return "delete!";
 //    }
 //
-//    public Optional<UserInfoDTO> findByUserId(String id) {
-//        return entityToDTO(userCustomRepository.findById(id));
-//    }
-//
-//    public Optional<UserInfoDTO> login(Map<String, Object> userInfo) {
-//        return userCustomRepository.login(userInfo);
-//    }
+
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        System.out.println("아아악");
-        System.out.println(id);
-        UserInfo userInfo = userCustomRepository.findById(id).orElseThrow(()-> new UsernameNotFoundException("등록되지 않은 사용자입니다."));
-        return toUserDetails(userInfo);
+
+        // 아이디가 없을 때
+        if(id == null || id.equals("")) {
+            return userCustomRepository.findById(id)
+                    .map(u -> new UserDetailsDTO(u, Collections.singleton(new SimpleGrantedAuthority(u.getAuthority()))))
+                    .orElseThrow(() -> new AuthenticationServiceException(id));
+        }
+        // 비밀번호가 맞지 않는 경우
+        else {
+            return userCustomRepository.findById(id)
+                    .map(u -> new UserDetailsDTO(u, Collections.singleton(new SimpleGrantedAuthority(u.getAuthority()))))
+                    .orElseThrow(() -> new BadCredentialsException(id));
+        }
     }
 
-    private UserDetails toUserDetails(UserInfo userInfo) {
-        return User.builder()
-                .username(userInfo.getId())
-                .password(userInfo.getPassword())
-                .authorities(new SimpleGrantedAuthority(userInfo.getAuthority().getName())).build();
-    }
 
+    /**
+     * DTO -> Entity 변환
+     * @param userInfoDTO
+     * @return
+     */
     UserInfo dtoToEntity(UserInfoDTO userInfoDTO){
         UserInfo userInfo = UserInfo.builder()
                 .seq(userInfoDTO.getSeq())
@@ -85,11 +101,17 @@ public class UserService implements UserDetailsService {
                 .email(userInfoDTO.getEmail())
                 .birthdate(userInfoDTO.getBirthdate())
                 .address(userInfoDTO.getAddress())
+                .authority(userInfoDTO.getAuthority())
                 .build();
 
         return userInfo;
     }
 
+    /**
+     * Entity -> DTO 변환
+     * @param userInfo
+     * @return
+     */
     UserInfoDTO entityToDTO(UserInfo userInfo){
         UserInfoDTO dto = UserInfoDTO.builder()
                 .seq(userInfo.getSeq())
@@ -106,6 +128,12 @@ public class UserService implements UserDetailsService {
         return dto;
     }
 
+
+    /**
+     * 중복 아이디 체크
+     * @param id
+     * @return
+     */
     public boolean findByUserId(String id) {
         Optional<UserInfo> userInfo = userCustomRepository.findById(id);
         return userInfo.isEmpty();

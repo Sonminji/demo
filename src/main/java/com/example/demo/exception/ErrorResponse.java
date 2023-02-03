@@ -25,8 +25,6 @@ public class ErrorResponse {
     public ErrorResponse(int status, String message) {
         this.status = status;
         this.message = message;
-        System.out.println("흑흑");
-        System.out.println(message);
     }
 
     public ErrorResponse() {

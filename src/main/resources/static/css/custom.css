@@ -488,3 +488,7 @@ html .ui-button.ui-state-disabled:active { border: 0px solid #c5c5c5; background
  border-radius: 5px;
 }
 
+#customerTable th, #customerTable td{
+ padding: 20px;
+}
+

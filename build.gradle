@@ -34,6 +34,7 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation 'org.jetbrains:annotations:23.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.json:json:20220320'
 //    implementation 'org.jetbrains:annotations:23.0.0'
 //    implementation 'org.jetbrains:annotations:23.0.0'
     compileOnly 'org.projectlombok:lombok'

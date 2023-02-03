@@ -12,8 +12,8 @@ public enum ErrorCode {
     VAILD_ERROR(400,"MEMBER-ERR-400","Valid ERROR"),
     ;
 
-    private int status;
-    private String errorCode;
-    private String message;
+    private int status; // http 상태
+    private String errorCode;   // 에러코드
+    private String message;     // 에러에 대한 메세지
 
 }

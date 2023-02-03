@@ -16,12 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
-/**
- * 
- */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -49,30 +49,29 @@ public class UserController {
      * @param model
      * @return
      */
-    @GetMapping("/login")
-    public String login(Model model){
+    @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "exception", required = false) String exception, Model model){
+        model.addAttribute("error", error);
+        model.addAttribute("exception", exception);
         return "/config/user/login.html";
     }
 
 
     /**
      * 로그인 기능 구현
-     * @param id 
+     * @param userInfoDTO
      * @return
      */
     @PostMapping(value = "/loginUser")
-    public ResponseEntity loginUser(@RequestBody String id, BindingResult bindingResult){
+    @ResponseBody
+    public ResponseEntity loginUser(Model model, @RequestBody UserInfoDTO userInfoDTO, BindingResult bindingResult){
 
-        System.out.println("@@@@");
-        System.out.println(id);
         Map<String, Object> resultMap = new HashMap<>();
-        UserDetails loginUser = userService.loadUserByUsername(id);
+        UserDetails loginUser = userService.loadUserByUsername((String) userInfoDTO.getId());
 
-//        resultMap.put("result", "success");
-        System.out.println("@@@@2222222");
-//        System.out.println();
-//        System.out.println(loginUser.getUsername());
         resultMap.put("result", "success");
+
         return ResponseEntity.ok().body(resultMap);
     }
 
@@ -100,13 +99,19 @@ public class UserController {
 //        return userService.findAll();
 //    }
 
-    // 특정 사용자 검색
+
+    /**
+     * 중복 아이디 체크
+     * @param id 
+     * @return
+     */
     @GetMapping("/checkDupli/{id}")
     @ResponseBody
     public boolean checkDupli(@PathVariable String id){
         boolean checkDupli = userService.findByUserId(id);
         return checkDupli;
     }
+
 //
 //    //특정 사용자 삭제
 //    @GetMapping("/delete/{seq}")

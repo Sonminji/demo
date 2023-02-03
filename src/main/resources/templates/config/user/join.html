@@ -72,7 +72,7 @@
             <div class="Form hide" style="width: 90%; margin-left: auto; margin-right: auto">
                 <form id="customer" th:field="*{userInfo}" onsubmit="return false;">
                     <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; width:750px; margin-left: auto; margin-right: auto;">
-                        <table class="table">
+                        <table class="table" id="customerTable">
                             <colgroup>
                                 <col width="25%">
                                 <col width="75%">
@@ -88,11 +88,46 @@
                             </tr>
                             <tr>
                                 <th>비밀번호</th>
-                                <td><input type="password" id="password" name="password" class="form-control" placeholder=""></td>
+                                <td>
+                                    <span style="display: flex;flex-direction: row;height: fit-content;" class="form-control pwCheck">
+                                        <input type="password" id="password" name="password" class="form-control"
+                                               placeholder="" style="height: 25px;border: 0;">
+                                        <span><i class="bi bi-lock-fill"></i></span>
+<!--                                        <span id ="pwLock">-->
+<!--                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"-->
+<!--                                                 fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">-->
+<!--                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>-->
+<!--                                            </svg>-->
+<!--                                        </span>-->
+<!--                                        <span id="pwUnlock" class="hide">-->
+<!--                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">-->
+<!--                                                <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"/>-->
+<!--                                            </svg>-->
+<!--                                        </span>-->
+                                    </span>
+                                </td>
                             </tr>
                             <tr>
                                 <th>비밀번호확인</th>
-                                <td><input type="password" id="rePassword" class="form-control" placeholder=""></td>
+                                <td>
+
+                                    <span style="display: flex;flex-direction: row;height: fit-content;" class="form-control pwReCheck">
+                                        <input type="password" id="rePassword" name="password" class="form-control"
+                                               placeholder="" style="height: 25px;border: 0;">
+                                    <span><i class="bi bi-lock-fill"></i></span>
+                                        <!--                                        <span id ="rePWLock">-->
+<!--                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"-->
+<!--                                                   fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">-->
+<!--                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>-->
+<!--                                            </svg>-->
+<!--                                        </span>-->
+<!--                                        <span id="rePWUnlock" class="hide">-->
+<!--                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">-->
+<!--                                                <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"/>-->
+<!--                                            </svg>-->
+<!--                                        </span>-->
+                                    </span>
+                                </td>
                             </tr>
                             <tr>
                                 <th>이름</th>
@@ -408,7 +443,27 @@
                     }
                 })
             })
+            $('.pwCheck i').on('click',function(){
+                $('.pwCheck input').toggleClass('active');
+                if($('.pwCheck input').hasClass('active')){
+                    $(this).attr('class',"bi bi-unlock-fill");
+                    $('.pwCheck input').attr('type',"text");
+                }else{
+                    $(this).attr('class',"bi bi-lock-fill");
+                    $('.pwCheck input').attr('type','password');
+                }
+            });
 
+            $('.pwReCheck i').on('click',function(){
+                $('.pwReCheck input').toggleClass('active');
+                if($('.pwReCheck input').hasClass('active')){
+                    $(this).attr('class',"bi bi-unlock-fill")
+                    $('.pwReCheck input').attr('type',"text");
+                }else{
+                    $(this).attr('class',"bi bi-lock-fill")
+                    $('.pwReCheck input').attr('type','password');
+                }
+            });
 
         </script>
     </th:block>

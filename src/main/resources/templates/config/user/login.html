@@ -22,7 +22,7 @@
 <!--        </div>-->
         <div style="width: 90%; margin:0 auto 0 auto; display: flex;flex-direction: column; justify-content: center;align-items: center;min-height: 65vh;">
             <div style="margin: 0 auto 20px auto; width:550px">
-                <form id="loginForm" method="post" onsubmit="return false;">
+                <form id="loginForm" method="post" action="/user/loginUser" onsubmit="">
                     <h1 style="text-align: center" class="mb-4">로그인</h1>
                     <input type="text" name="id" placeholder="아이디" class="form-control mb-1 box">
                     <input type="password" name="password" placeholder="비밀번호" class="form-control box">
@@ -45,34 +45,53 @@
     <th:block layout:fragment="script">
         <script th:inline="javascript">
 
+            $(document).ready(function (){
+                let failMsg = [[${exception}]];
+                if(failMsg !== null && failMsg !== ""){
+                    alert(failMsg);
+                }
+
+            })
+
             function login(){
 
+                let formData = new FormData($("#loginForm")[0]);
 
-                let returnType = true;
+                let userInfo = {};
+                for (let key of formData.keys()) {
+                    // console.log(key, ":", formData.get(key));
+                    userInfo[key] = formData.get(key);
+                }
 
-                $.ajax({
-                    url: '/user/loginUser',
-                    type: 'POST',
-                    async: false,
-                    cache :false,
-                    dataType : 'json',
-                    contentType: 'application/json; charset=utf-8',
-                    data: $("input[name=id]").val(),
-                    success: function(data) {
-                        if(data.result === "success"){
-                            // $(location).attr("href", "/");
-                        }else{
-                            alert("등록되지 않은 사용자입니다.");
-                        }
-                    },
-                    error: function(error) {
-                        console.log("error");
-                        alert("등록되지 않은 사용자입니다.");
-                        returnType = false;
-                    }
-                })
 
-                return returnType;
+                $("#loginForm").submit();
+
+                // let returnType = true;
+
+                // $.ajax({
+                //     url: '/user/loginUser',
+                //     type: 'POST',
+                //     dataType : 'json',
+                //     data: JSON.stringify(userInfo),
+                //     success: function(data) {
+                //         if(data.result === "success"){
+                //             // $(location).attr("href", data.url);
+                //         }else{
+                //
+                //         }
+                //         $(location).attr("href", "/");
+                //         console.log(data);
+                //         // alert(data.failMsg);
+                //     },
+                //     error: function(error) {
+                //         console.log("error");
+                //         console.log(error)
+                //         alert("등록되지 않은 사용자입니다.");
+                //         returnType = false;
+                //     }
+                // })
+
+                // return returnType;
             }
 
         </script>
