@@ -4,6 +4,7 @@ package com.example.demo.security;
 import com.example.demo.dto.UserDetailsDTO;
 import com.example.demo.dto.UserInfoDTO;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import nonapi.io.github.classgraph.json.JSONSerializer;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +41,9 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
+    @Resource
+    private UserService userService;
+
 
     // 인증 성공 시
     @Override
@@ -47,58 +52,17 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
 
         UserInfo userInfo = ((UserDetailsDTO) authentication.getPrincipal()).getUserInfo();
 
-
+        UserInfoDTO userInfoDTO = userService.entityToDTO(userInfo);
 
         clearAuthenticationAttributes(request);
 
         if(userInfo.getAuthority().equals("USER")){
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("userInfo", userInfoDTO);
             redirectStrategy.sendRedirect(request, response, "/");
         } else{
             redirectStrategy.sendRedirect(request, response, "/user/login");
         }
-
-
-//        response.setStatus(HttpStatus.OK.value());
-//        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-
-//        objectMapper.writeValue(response.getWriter(), userInfo);
-
-        // 사용자 정보 조회
-//        UserInfo userInfo = ((UserDetailsDTO) authentication.getPrincipal()).getUserInfo();
-//
-////        response.setStatus(HttpServletResponse.SC_OK);
-////        response.sendRedirect("/");
-//        HashMap<String, Object> responseMap = new HashMap<>();
-//
-//        JSONObject jsonObject;
-//
-//        List<String> roleName = new ArrayList<>();
-//
-//        authentication.getAuthorities().forEach(auth -> {
-//            roleName.add(auth.getAuthority());
-//        });
-//
-//        if(roleName.contains("USER")){
-//            responseMap.put("result", "success");
-//            responseMap.put("resultCode", 200);
-//            responseMap.put("userInfo", userInfo);
-//            responseMap.put("failMsg", null);
-//            responseMap.put("url", "/");
-//        }
-//
-//        jsonObject = new JSONObject(responseMap);
-//
-//
-//
-//
-//        // [STEP4] 구성한 응답 값을 전달합니다.
-//        response.setCharacterEncoding("UTF-8");
-//        response.setContentType("application/json");
-//        PrintWriter printWriter = response.getWriter();
-//        printWriter.print(jsonObject);  // 최종 저장된 '사용자 정보', '사이트 정보' Front 전달
-//        printWriter.flush();
-//        printWriter.close();
     }
 
 }

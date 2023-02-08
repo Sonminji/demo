@@ -7,6 +7,7 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.repository.UserCustomRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,9 +45,13 @@ public class UserService implements UserDetailsService {
      */
     public String save(UserInfoDTO dto) {
 
-        // 비밀번호 암호화 및 권한 부여
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        // 권한 부여
         dto.setAuthority("USER");
+
+        // 비밀번호 암호화
+        if(dto.getPassword() != null && dto.getPassword() != ""){
+            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
 
         UserInfo userInfo = dtoToEntity(dto);
         userRepository.save(userInfo);
@@ -90,7 +95,7 @@ public class UserService implements UserDetailsService {
      * @param userInfoDTO
      * @return
      */
-    UserInfo dtoToEntity(UserInfoDTO userInfoDTO){
+    public UserInfo dtoToEntity(UserInfoDTO userInfoDTO){
         UserInfo userInfo = UserInfo.builder()
                 .seq(userInfoDTO.getSeq())
                 .id(userInfoDTO.getId())
@@ -102,6 +107,7 @@ public class UserService implements UserDetailsService {
                 .birthdate(userInfoDTO.getBirthdate())
                 .address(userInfoDTO.getAddress())
                 .authority(userInfoDTO.getAuthority())
+                .loginType(userInfoDTO.getLoginType())
                 .build();
 
         return userInfo;
@@ -112,7 +118,7 @@ public class UserService implements UserDetailsService {
      * @param userInfo
      * @return
      */
-    UserInfoDTO entityToDTO(UserInfo userInfo){
+    public UserInfoDTO entityToDTO(UserInfo userInfo){
         UserInfoDTO dto = UserInfoDTO.builder()
                 .seq(userInfo.getSeq())
                 .id(userInfo.getId())
@@ -123,6 +129,7 @@ public class UserService implements UserDetailsService {
                 .email(userInfo.getEmail())
                 .birthdate(userInfo.getBirthdate())
                 .address(userInfo.getAddress())
+                .loginType(userInfo.getLoginType())
                 .build();
 
         return dto;
@@ -138,5 +145,19 @@ public class UserService implements UserDetailsService {
         Optional<UserInfo> userInfo = userCustomRepository.findById(id);
         return userInfo.isEmpty();
 
+    }
+
+    public UserInfoDTO loginWithSMS(UserInfoDTO dto) {
+        Optional<UserInfo> savedUser = userCustomRepository.findSMSUser(dto.getEmail(), dto.getLoginType());
+
+        if(!savedUser.isPresent()){
+            UserInfo userInfo = dtoToEntity(dto);
+            userRepository.save(userInfo);
+            UserInfoDTO userInfoDTO = entityToDTO(userInfo);
+
+            return userInfoDTO;
+        }
+
+        return entityToDTO(savedUser.get());
     }
 }

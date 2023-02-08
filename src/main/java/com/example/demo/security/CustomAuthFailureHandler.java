@@ -10,6 +10,7 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -18,6 +19,7 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
@@ -36,6 +38,7 @@ public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHand
                                         AuthenticationException exception) throws IOException, ServletException {
         
         String failMsg = "";
+
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -61,7 +64,10 @@ public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHand
         } else {
             failMsg = exception.getMessage();
         }
-        
+
+        HttpSession session = request.getSession(false);
+        if(session==null) return;
+        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         
         failMsg = URLEncoder.encode(failMsg, "UTF-8");      // 한글 깨짐 방지
         setDefaultFailureUrl("/user/login?error=true&exception="+failMsg);      // 다음 번에는 errorMsg를 내부로 고려

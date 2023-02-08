@@ -7,6 +7,7 @@ import com.example.demo.exception.ErrorResponse;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.connector.Response;
+import org.apache.catalina.manager.util.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.*;
 
 
@@ -29,6 +34,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    private String CLIENT_ID = "9R3dRrJDnRVMPDuGASCs";
 
 
     /**
@@ -43,6 +50,40 @@ public class UserController {
         return "/config/user/join.html";
     }
 
+    /**
+     * 회원가입 기능 구현
+     * @param userInfoDTO
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/joinUser")
+    @ResponseBody
+    public ResponseEntity joinUser(@RequestBody @Valid UserInfoDTO userInfoDTO, BindingResult bindingResult){
+        Map<String, Object> resultMap = new HashMap<>();
+        String status = userService.save(userInfoDTO);
+
+        resultMap.put("result", "success");
+
+        return ResponseEntity.ok().body(resultMap);
+    }
+
+    /**
+     * 카카오 로그인
+     * @param request
+     * @param userInfoDTO
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping(value = "/smsJoin")
+    public String smsJoin(HttpServletRequest request, UserInfoDTO userInfoDTO, BindingResult bindingResult){
+        HttpSession httpSession = request.getSession();
+
+        UserInfoDTO userInfo = userService.loginWithSMS(userInfoDTO);
+
+        httpSession.setAttribute("userInfo", (userInfo != null ? userInfo : ""));
+
+        return "redirect:/";
+    }
 
     /**
      * 로그인 페이지
@@ -76,20 +117,6 @@ public class UserController {
     }
 
 
-    /**
-     * 회원가입 기능 구현
-     * @param userInfoDTO 
-     * @param bindingResult
-     * @return
-     */
-    @PostMapping(value = "/joinUser")
-    @ResponseBody
-    public ResponseEntity joinUser(@RequestBody @Valid UserInfoDTO userInfoDTO, BindingResult bindingResult){
-        Map<String, Object> resultMap = new HashMap<>();
-        String status = userService.save(userInfoDTO);
-        resultMap.put("result", "success");
-        return ResponseEntity.ok().body(resultMap);
-    }
 
     //모든 사용자 검색
 //    @GetMapping("/findAllUser")

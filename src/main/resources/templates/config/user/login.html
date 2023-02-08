@@ -16,10 +16,10 @@
 <!-- Content -->
 <div layout:fragment="content">
     <div class="container">
-<!--        <div class="title">-->
-<!--            <h2>로그인</h2>-->
-<!--            <hr/>-->
-<!--        </div>-->
+        <!--        <div class="title">-->
+        <!--            <h2>로그인</h2>-->
+        <!--            <hr/>-->
+        <!--        </div>-->
         <div style="width: 90%; margin:0 auto 0 auto; display: flex;flex-direction: column; justify-content: center;align-items: center;min-height: 65vh;">
             <div style="margin: 0 auto 20px auto; width:550px">
                 <form id="loginForm" method="post" action="/user/loginUser" onsubmit="">
@@ -32,28 +32,63 @@
             </div>
             <div style="margin-left: auto; margin-right: auto;width:550px;">
                 <div style="width:100%;display: flex;flex-direction: row;justify-content: center;align-items: center;">
-                    <button type="button" class="mb-1 box sms-btn" style="width:10%"><img src="/image/kakaotalk_sharing_btn_small.png" style="width:100%;height: 100%"></button>
-                    <button type="button" class="mb-1 box sms-btn" style="width:10%"><img src="/image/btnG_아이콘사각.png" style="width:100%;height: 100%"></button>
-                    <button type="button" class="mb-1 box sms-google-btn" data-provider="Google" style="width:9%;margin-left:1%">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.785 9.169c0-.738-.06-1.276-.189-1.834h-8.42v3.328h4.942c-.1.828-.638 2.073-1.834 2.91l-.016.112 2.662 2.063.185.018c1.694-1.565 2.67-3.867 2.67-6.597z"></path><path fill="#34A853" d="M9.175 17.938c2.422 0 4.455-.797 5.94-2.172l-2.83-2.193c-.758.528-1.774.897-3.11.897-2.372 0-4.385-1.564-5.102-3.727l-.105.01-2.769 2.142-.036.1c1.475 2.93 4.504 4.943 8.012 4.943z"></path><path fill="#FBBC05" d="M4.073 10.743c-.19-.558-.3-1.156-.3-1.774 0-.618.11-1.216.29-1.774l-.005-.119L1.254 4.9l-.091.044C.555 6.159.206 7.524.206 8.969c0 1.445.349 2.81.957 4.026l2.91-2.252z"></path><path fill="#EB4335" d="M9.175 3.468c1.684 0 2.82.728 3.468 1.335l2.531-2.471C13.62.887 11.598 0 9.175 0 5.667 0 2.638 2.013 1.163 4.943l2.9 2.252c.727-2.162 2.74-3.727 5.112-3.727z"></path></svg>
-                    </button>
+                    <button type="button" class="mb-1 box sms-btn" style="width:10%" onclick="kakaoLogin()"><img
+                            src="/image/kakaotalk_sharing_btn_small.png" style="width:100%;height: 100%;margin-top: 1px;"></button>
+<!--                    <button type="button" class="mb-1 box sms-btn" style="width:10%" id="naver_id_login"-->
+<!--                            onclick="naverLogin();"><img-->
+<!--                            src="/image/btnG_아이콘사각.png" style="width:100%;height: 100%"></button>-->
+                    <div id="naver_id_login" class="mb-1 box sms-btn" style="width:10%; padding: 4px 3px 0px 5px;" ></div>
+<!--                    <button type="button" id="googleLogin" class="mb-1 box sms-google-btn g-signin2" data-provider="Google"-->
+<!--                            style="width:9%;margin-left:1%" data-onsuccess="handleCredentialResponse">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">-->
+<!--                            <path fill="#4285F4"-->
+<!--                                  d="M17.785 9.169c0-.738-.06-1.276-.189-1.834h-8.42v3.328h4.942c-.1.828-.638 2.073-1.834 2.91l-.016.112 2.662 2.063.185.018c1.694-1.565 2.67-3.867 2.67-6.597z"></path>-->
+<!--                            <path fill="#34A853"-->
+<!--                                  d="M9.175 17.938c2.422 0 4.455-.797 5.94-2.172l-2.83-2.193c-.758.528-1.774.897-3.11.897-2.372 0-4.385-1.564-5.102-3.727l-.105.01-2.769 2.142-.036.1c1.475 2.93 4.504 4.943 8.012 4.943z"></path>-->
+<!--                            <path fill="#FBBC05"-->
+<!--                                  d="M4.073 10.743c-.19-.558-.3-1.156-.3-1.774 0-.618.11-1.216.29-1.774l-.005-.119L1.254 4.9l-.091.044C.555 6.159.206 7.524.206 8.969c0 1.445.349 2.81.957 4.026l2.91-2.252z"></path>-->
+<!--                            <path fill="#EB4335"-->
+<!--                                  d="M9.175 3.468c1.684 0 2.82.728 3.468 1.335l2.531-2.471C13.62.887 11.598 0 9.175 0 5.667 0 2.638 2.013 1.163 4.943l2.9 2.252c.727-2.162 2.74-3.727 5.112-3.727z"></path>-->
+<!--                        </svg>-->
+<!--                    </button>-->
+                    <div id="g_id_onload"
+                         data-login_uri="http://localhost:8082/"
+                         data-client_id="805178260761-5u5rclvmcdnmd5mkcv1nru4hbpdeifhk.apps.googleusercontent.com"
+                         data-callback="handleCredentialResponse">
+                    </div>
+                    <div class="g_id_signin" data-type="icon"></div>
+<!--                    <div class="g-signin2" data-onsuccess="handleCredentialResponse"></div>-->
+                    <!--                    <div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+<!--                    <div id="my-signin2"></div>-->
                 </div>
-<!--                <button type="button" class="mb-1 box sms-btn" style="width:30%"><img src="/image/btn_google_signin_light_normal_web@2x.png" style="width:100%;height: 100%;"></button>-->
+                <form id="form-sms-login" method="post" action="/user/smsJoin">
+                    <input type="hidden" name="email"/>
+                    <input type="hidden" name="name"/>
+                    <input type="hidden" name="loginType"/>
+                </form>
             </div>
         </div>
     </div>
     <th:block layout:fragment="script">
+<!--        <script src="https://apis.google.com/js/platform.js" async defer></script>-->
+<!--&lt;!&ndash;        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">&ndash;&gt;-->
+        <!-- google login -->
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <meta name="google-signin-client_id" content="805178260761-5u5rclvmcdnmd5mkcv1nru4hbpdeifhk.apps.googleusercontent.com">
+
         <script th:inline="javascript">
 
-            $(document).ready(function (){
+            $(document).ready(function () {
                 let failMsg = [[${exception}]];
-                if(failMsg !== null && failMsg !== ""){
+                if (failMsg !== null && failMsg !== "") {
                     alert(failMsg);
                 }
 
+
             })
 
-            function login(){
+            function login() {
 
                 let formData = new FormData($("#loginForm")[0]);
 
@@ -66,33 +101,70 @@
 
                 $("#loginForm").submit();
 
-                // let returnType = true;
-
-                // $.ajax({
-                //     url: '/user/loginUser',
-                //     type: 'POST',
-                //     dataType : 'json',
-                //     data: JSON.stringify(userInfo),
-                //     success: function(data) {
-                //         if(data.result === "success"){
-                //             // $(location).attr("href", data.url);
-                //         }else{
-                //
-                //         }
-                //         $(location).attr("href", "/");
-                //         console.log(data);
-                //         // alert(data.failMsg);
-                //     },
-                //     error: function(error) {
-                //         console.log("error");
-                //         console.log(error)
-                //         alert("등록되지 않은 사용자입니다.");
-                //         returnType = false;
-                //     }
-                // })
-
-                // return returnType;
             }
+
+
+            Kakao.init('f0fe79df26a69dfaf2e986eab5fc9b83');
+
+            function kakaoLogin() {
+                Kakao.Auth.login({
+                    success: function (response) {
+                        Kakao.API.request({
+                            url: '/v2/user/me',
+                            success: function (response) {
+                                console.log("userInfo : ", response);
+                                let account = response.kakao_account;
+                                $("#form-sms-login input[name=name]").val(account.profile.nickname);
+                                $("#form-sms-login input[name=email]").val(account.email);
+                                $("#form-sms-login input[name=loginType]").val("kakao");
+                                $("#form-sms-login").submit();
+                                // $(location).attr("href", "/");
+
+                            },
+                            fail: function (error) {
+                                console.log("error", error)
+                            },
+                        })
+                    },
+                    fail: function (error) {
+                        console.log(error)
+                    },
+                });
+            }
+            naver_id_login = new naver_id_login("fGCoGNkQJGC4pOK7MQhP", "http://localhost:8082/");
+            state = naver_id_login.getUniqState();
+            naver_id_login.setButton("green", 1,"40px");
+            naver_id_login.setDomain("http://localhost:8082");
+            naver_id_login.setState(state);
+            // naver_id_login.setPopup();
+            naver_id_login.init_naver_id_login();
+
+
+            function handleCredentialResponse(response) {
+                // decodeJwtResponse() is a custom function defined by you
+                // to decode the credential response.
+                const responsePayload = parseJwt(response.credential);
+
+                // console.log("ID: " + responsePayload.sub);
+                $("#form-sms-login input[name=name]").val(responsePayload.name);
+                $("#form-sms-login input[name=email]").val(responsePayload.email);
+                $("#form-sms-login input[name=loginType]").val("google");
+                $("#form-sms-login").submit();
+
+            }
+
+            function parseJwt (token) {
+                var base64Url = token.split('.')[1];
+                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                return JSON.parse(jsonPayload);
+            };
+
+
+        </script>
 
         </script>
     </th:block>

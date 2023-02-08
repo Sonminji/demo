@@ -23,6 +23,9 @@ public class UserInfo{
     @Column(name = "seq")
     private int seq;    // 번호
 
+    @Column(name = "login_type")
+    private String loginType;
+
     @Column(name = "id", unique = true)
     private String id;  // 아이디
     @Column(name = "name")

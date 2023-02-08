@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/default_layout}">
+
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+    <!--    <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
+    <style type="text/css">
+        .ui-jqgrid .ui-jqgrid-bdiv { overflow-y: scroll }
+    </style>
+</th:block>
+
+<!-- Content -->
+<div layout:fragment="content">
+    <div class="container">
+        <div class="title">
+            <h2>최신 뉴스</h2>
+            <hr/>
+        </div>
+        <div style="width: 90%; margin-left: auto; margin-right: auto">
+<!--               <table class="table">-->
+<!--                   <tr>-->
+<!--                       <th>-->
+<!--                           번호-->
+<!--                       </th>-->
+<!--                       <th>-->
+<!--                           날짜-->
+<!--                       </th>-->
+<!--                       <th>-->
+<!--                           제목-->
+<!--                       </th>-->
+<!--                   </tr>-->
+<!--&lt;!&ndash;                   <tr th:each="content, i : ${content}">&ndash;&gt;-->
+<!--&lt;!&ndash;                       <td th:text="${i.count}"></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                       <td th:text="${#dates.format(content.pubDate, 'yyyy-MM-dd hh:mm:ss')}"></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                       <td><span th:text="${content.title}"></span></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                   </tr>&ndash;&gt;-->
+<!--               </table>-->
+            <table id="grid"></table>
+            <div id="pager"></div>
+        </div>
+    </div>
+    <th:block layout:fragment="script">
+        <link rel="stylesheet" type="text/css" media="screen" href="/jqGrid4.4.3/css/ui.jqgrid.css" />
+        <script type="text/javascript" src="/jqGrid4.4.3/js/jquery-1.7.2.min.js"></script>
+        <!--<script type="text/javascript" src="./jqGrid_4.4.3/js/jquery.jqGrid.src.js" ></script> -->
+        <script type="text/javascript" src="/jqGrid4.4.3/js/i18n/grid.locale-kr.js" ></script>
+        <script type="text/javascript" src="/jqGrid4.4.3/js/jquery.jqGrid.min.js" ></script>
+        <script th:inline="javascript">
+                // let content = [[${content}]];
+                // for(let i = 0; i < content.length; i++){
+                //         console.log(content[i].title);
+                //         console.log(content[i].link);
+                //
+                // }
+                var $Grid = {};
+                $(document).ready(function(){
+                    $Grid = $('#grid');
+                    $Grid.jqGrid({
+                        url : '/api/getNewsList',
+                        datatype : "json",
+                        getData : {table : 'NewsInfo'},
+                        mtype : "GET",
+                        // jsonReader : {
+                        //     id : "seq" // 대표 아이디를 설정
+                        //     ,root : "seq" // 데이터의 시작을 설정
+                        // },
+                        colNames : [
+                            '번호',
+                            '날짜',
+                            '제목',
+                            '조회수'
+                        ],
+                        colModel : [
+                            { name : 'seq',        width:40,  align:'center'},
+                            { name : 'pubDate',      width:80,  align:'left'  },
+                            { name : 'title',       width:80,  align:'left'  },
+                            { name : 'views',       width:80,  align:'right' },
+                        ],
+                        pager : '#pager',
+                        width: 1000,
+                        height: 480,
+                        rowNum: 10,
+                        rowList: [10,20,30],
+                        multiselect : true,
+                        ondblClickRow : function(rowId, iRow, iCol, e) {
+
+                            if(iCol == 1) {
+                                alert(rowId+" 째줄 입니다.");
+                            }
+                        },
+                        viewrecords : true,
+                        caption:"JQGRID TABLE"
+                    });
+                });
+
+        </script>
+    </th:block>
+</div>
+
+</html>

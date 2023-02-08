@@ -5,16 +5,23 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!--        <meta name ="google-signin-client_id" content="805178260761-5u5rclvmcdnmd5mkcv1nru4hbpdeifhk.apps.googleusercontent.com">-->
         <title>title</title>
         <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/jquery-ui.min.css">
         <link rel="stylesheet" type="text/css" href="/css/custom.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9.0.2/swiper-bundle.min.css">
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <script rel="script" type="text/javascript" src="/js/jquery-3.6.3.min.js"></script>
         <script rel="script" type="text/javascript" src="/js/bootstrap.min.js"></script>
         <script rel="script" type="text/javascript" src="/js/jquery-ui.min.js"></script>
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@9.0.2/swiper-bundle.min.js"></script>
+        <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+        <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+        <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charSet="utf-8"></script>
+<!--        <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>-->
     </head>
     <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
@@ -29,7 +36,7 @@
 <!--                            <a class="nav-link" href="#">공지사항<span class="sr-only">(current)</span></a>-->
 <!--                        </li>-->
                         <li class="nav-item">
-                            <a class="nav-link" href="#">IT 기사</a>
+                            <a class="nav-link" href="/api/search">IT 기사</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Code 공유</a>
@@ -56,11 +63,14 @@
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="/user/login" th:if="${userID == null || userID == ''}">로그인</a>
-                            <a class="nav-link" href="/user/logout" th:if="${userID != null && userID != ''}">로그아웃</a>
+                            <span class="nav-link" th:if="${userInfo != null}" th:text="${userInfo.getName()}"></span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/user/join" th:if="${userID == null || userID == ''}">회원가입</a>
+                            <a class="nav-link" href="/user/login" th:if="${userInfo == null}">로그인</a>
+                            <a class="nav-link" href="/user/logout" th:if="${userInfo != null}">로그아웃</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/join" th:if="${userInfo == null}">회원가입</a>
                         </li>
                     </ul>
                 </div>

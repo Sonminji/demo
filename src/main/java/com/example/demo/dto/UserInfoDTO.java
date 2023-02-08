@@ -20,6 +20,8 @@ public class UserInfoDTO {
 
     private int seq;    // 번호
 
+    private String loginType;
+
     @NotNull
     @NotEmpty(message = "아이디를 8자 이상 입력해주세요.")
     private String id;  // 아이디

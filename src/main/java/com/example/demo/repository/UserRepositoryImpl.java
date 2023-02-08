@@ -39,5 +39,28 @@ public class UserRepositoryImpl implements UserCustomRepository {
 
     }
 
+    @Override
+    public Optional<UserInfo> findUserByEmail(String email) {
+
+        QUserInfo user = QUserInfo.userInfo;
+
+        return Optional.ofNullable(queryFactory
+                .select(user)
+                .from(user)
+                .where(user.email.eq(email))
+                .fetchOne());
+    }
+
+    @Override
+    public Optional<UserInfo> findSMSUser(String email, String loginType) {
+        QUserInfo user = QUserInfo.userInfo;
+
+        return Optional.ofNullable(queryFactory
+                .select(user)
+                .from(user)
+                .where(user.email.eq(email).and(user.loginType.eq(loginType)))
+                .fetchOne());
+    }
+
 
 }

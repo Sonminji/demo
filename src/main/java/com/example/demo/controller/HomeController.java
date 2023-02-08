@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.UserDetailsDTO;
 import com.example.demo.dto.UserInfoDTO;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.service.UserService;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -12,17 +13,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
-    public String home(Model model, Authentication authentication){
+    @Resource
+    UserService userService;
 
-            model.addAttribute("userID", authentication != null ? authentication.getName() : "");
+    @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
+    public String home(HttpServletRequest request, Model model, Authentication authentication){
+        HttpSession httpSession = request.getSession();
+        Object userInfo = httpSession.getAttribute("userInfo");
+
+        if(userInfo != null){
+            model.addAttribute("userInfo", userInfo);
+        }else{
+            model.addAttribute("userInfo", null);
+        }
 
         return "home";
     }
